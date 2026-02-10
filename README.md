@@ -26,7 +26,7 @@ If you don't want to use HACS, here's the manual installation method:
 3. **Add Card:** Go to your dashboard, click "Edit", "Add Card", and select **Custom: Clock PV Forecast Card**.
 
 ### ⚙️ Configuration
-You can configure almost everything via the **Visual Editor**. For advanced setups (like color thresholds), you can use YAML.
+The card features a **Full Visual Editor**. You can configure everything directly in the UI, including styles and colors.
 
 | Option | Type | Default | Description |
 |:-----|:-----|:--------|:------------|
@@ -42,8 +42,11 @@ You can configure almost everything via the **Visual Editor**. For advanced setu
 | `weekday_format` | string | `short` | `short` (Mon), `long` (Monday), `narrow` (M). |
 | `date_format` | string | `short` | `short` (12. Jun) or `numeric` (12.6.). |
 | `relative_plus_one` | boolean | `false` | Use `+1d` instead of "Tomorrow" in relative mode. |
-| `bar_style` | string | `gradient` | `gradient` (default) or `solid` (threshold colors). |
-| `color_thresholds` | list | (default) | **YAML only:** Define colors for `solid` mode. |
+| `bar_style` | string | `gradient` | `gradient`, `solid` (one color per value), or `tiered` (ranges). |
+| `color_thresholds_manual` | string | Optional | **Visual Editor:** Define tiers as `0:red, 10:yellow, 25:green`. |
+| `color_thresholds` | list | (default) | **YAML only:** List of value/color objects for thresholds. |
+| `bar_type` | string | `smooth` | `smooth`, `segmented` (blocks), or `digital` (thin lines). |
+| `bar_shape` | string | `rounded` | `rounded` (soft edges) or `sharp` (rectangular). |
 | `gradient_fixed` | boolean | `false` | If `true`, the gradient spans 0-100% fixed width. |
 | `animation_duration` | string | `1s` | Duration of the bar filling animation. |
 | `day_column_width` | string | (auto) | Custom width for the day label column (e.g., `3em`). |
@@ -94,7 +97,7 @@ color_thresholds:
 
 ### ⚙️ Konfiguration
 
-Die Karte verfügt nun über einen **Visuellen Editor**. Die meisten Einstellungen können bequem per Klick vorgenommen werden.
+Die Karte verfügt nun über einen **Vollständigen Visuellen Editor**. Alle Einstellungen, inklusive Stile und Farben, können bequem per Klick vorgenommen werden.
 
 | Option | Typ | Standard | Beschreibung |
 |:-----|:-----|:--------|:------------|
@@ -110,8 +113,11 @@ Die Karte verfügt nun über einen **Visuellen Editor**. Die meisten Einstellung
 | `weekday_format` | string | `short` | `short` (Mo), `long` (Montag), `narrow` (M). |
 | `date_format` | string | `short` | `short` (12. Jun) oder `numeric` (12.6.). |
 | `relative_plus_one` | boolean | `false` | Nutzt `+1d` statt "Morgen" im Relativ-Modus. |
-| `bar_style` | string | `gradient` | `gradient` (Verlauf) oder `solid` (Schwellenwerte). |
-| `color_thresholds` | Liste | (Standard) | **Nur YAML:** Farben für `solid` Modus. |
+| `bar_style` | string | `gradient` | `gradient` (Verlauf), `solid` (Einzelfarbe) oder `tiered` (Segmente). |
+| `color_thresholds_manual` | string | Optional | **Editor:** Schwellenwerte als `0:red, 10:yellow, 25:green`. |
+| `color_thresholds` | Liste | (Standard) | **Nur YAML:** Liste von Wert/Farb-Objekten für Schwellenwerte. |
+| `bar_type` | string | `smooth` | `smooth` (gefüllt), `segmented` (Blöcke) oder `digital` (Linien). |
+| `bar_shape` | string | `rounded` | `rounded` (Abgerundet) oder `sharp` (Rechteckig). |
 | `gradient_fixed` | boolean | `false` | Wenn `true`, spannt der Verlauf über 0-100% Breite. |
 | `animation_duration` | string | `1s` | Dauer der Balken-Animation. |
 | `day_column_width` | string | (auto) | Eigene Breite für die Tages-Spalte (z.B. `3em`). |
