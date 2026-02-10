@@ -5,7 +5,7 @@ const LitElement = Object.getPrototypeOf(customElements.get("ha-panel-lovelace")
 const html = LitElement.prototype.html;
 const css = LitElement.prototype.css;
 
-console.info("📦 clock-pv-forecast-card v2.0.0 loaded (Smooth Operator)");
+console.info("📦 clock-pv-forecast-card v2.0.1 loaded (Smooth Operator)");
 
 const translations = {
   en: { forecast: "Forecast", remaining: "Remaining", last_updated: "Last updated", today: "Today", tomorrow: "Tomorrow", error_config: "Configuration Error", error_entity: "At least one forecast entity must be defined", unavailable: "Unavailable", unknown: "Unknown" },
@@ -179,7 +179,9 @@ class ClockPvForecastCard extends LitElement {
     if (this.config.bar_style === 'solid') {
       backgroundValue = this._getThresholdColor(value);
     } else if (this.config.bar_style === 'tiered') {
-      backgroundValue = this._getTieredBackground(rowMax);
+      // For tiered, we always want the segments to be relative to the GLOBAL scale (maxValue),
+      // so that "10kWh" looks the same width on every bar.
+      backgroundValue = this._getTieredBackground(maxValue);
     } else {
       backgroundValue = `linear-gradient(to right, ${this.config.bar_color_start}, ${this.config.bar_color_end})`;
     }
@@ -187,6 +189,7 @@ class ClockPvForecastCard extends LitElement {
     const barStyle = `--bar-width: ${barWidthVal}%; --bar-bg: ${backgroundValue}; --animation-time: ${this.config.animation_duration}`;
     const barTypeClass = this.config.bar_type ? `type-${this.config.bar_type}` : 'type-smooth';
     const barShapeClass = `shape-${this.config.bar_shape || 'rounded'}`;
+    const isFixedGradient = this.config.gradient_fixed || this.config.bar_style === 'tiered';
 
     let attributeMarker = '';
     let attributeText = '';
@@ -194,6 +197,8 @@ class ClockPvForecastCard extends LitElement {
     if (this.config.forecast_attribute && entityState.attributes[this.config.forecast_attribute] !== undefined) {
       const attrVal = parseFloat(entityState.attributes[this.config.forecast_attribute]);
       if (!isNaN(attrVal)) {
+        // Markers should also be relative to global max in fixed/tiered modes for consistency? 
+        // Current logic uses rowMax which is correct for bar position.
         const attrPos = this._barWidth(attrVal, rowMax);
         attributeMarker = html`<div class="attribute-marker" style="left: ${attrPos}%; --attr-color: ${this.config.attribute_color || '#f39c12'};"></div>`;
         // Optional: Add to tooltip or text? For now, just marker as requested "visual all the time"
@@ -249,7 +254,7 @@ class ClockPvForecastCard extends LitElement {
     return html`
       <div class="forecast-row" role="row">
         <div class="day" role="cell" style="width: ${this.config.day_column_width}">${dayLabel}</div>
-        <div class="bar-container ${barShapeClass} ${this.config.gradient_fixed ? 'fixed-gradient' : ''}" role="cell">
+        <div class="bar-container ${barShapeClass} ${isFixedGradient ? 'fixed-gradient' : ''}" role="cell">
           <div class="bar ${barTypeClass} ${barShapeClass}" style="${barStyle}"></div>
           ${attributeMarker}
           ${remainingDot}${remainingText}
